@@ -17,6 +17,7 @@ import { doJailbust } from "./actions/jailbuster.js";
 import { fetchDrugRun } from "./actions/drugrunfetcher.js";
 import { searchAccount } from "./detective/search.js";
 import { findResult } from "./detective/findresult.js";
+import { setAuthCookie } from "./cookies.js";
 
 chrome.browserAction.onClicked.addListener(() => {
     chrome.tabs.create({ url: "index.html" });
@@ -64,14 +65,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         }
 
         if (tabSessions[details.tabId] != null) {
-            for (var i = 0; i < details.requestHeaders.length; i++) {
-                if (details.requestHeaders[i].name === "Cookie") {
-                    const email = tabSessions[details.tabId];
-                    const cookie = mobAuths[email];
-                    details.requestHeaders[i].value = cookie;
-                    break;
-                }
-            }
+            const email = tabSessions[details.tabId];
+            const cookie = mobAuths[email];
+
+            setAuthCookie(details.requestHeaders, cookie);
+
             return { requestHeaders: details.requestHeaders };
         }
 
@@ -93,17 +91,14 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         };
 
         const cookie = mobAuths[email.value];
-
-        for (var i = 0; i < details.requestHeaders.length; i++) {
-            if (details.requestHeaders[i].name === "Cookie") {
-                details.requestHeaders[i].value = cookie;
-                break;
-            }
+        // Initial login requests won't have a cookie
+        if (cookie) {
+            setAuthCookie(details.requestHeaders, cookie);
         }
 
         return { requestHeaders: details.requestHeaders };
     },
-    { urls: ["https://www.mobstar.cc/*"] },
+    { urls: ["https://*.mobstar.cc/*"] },
     ["blocking", "requestHeaders", "extraHeaders"]
 );
 
@@ -143,7 +138,6 @@ chrome.webRequest.onHeadersReceived.addListener((details) => {
 
     if (authCookie) {
         const authCookieParts = authCookie.value.split(";");
-        //window.currentCookie = authCookieParts[0];
         mobAuths[email] = authCookieParts[0];
 
     } else {
@@ -155,7 +149,7 @@ chrome.webRequest.onHeadersReceived.addListener((details) => {
     details.responseHeaders = details.responseHeaders.filter(header => header.name !== "Set-Cookie");
     return { responseHeaders: details.responseHeaders };
 },
-    { urls: ["https://www.mobstar.cc/*"] },
+    { urls: ["https://*.mobstar.cc/*"] },
     ["blocking", "responseHeaders", "extraHeaders"]);
 
 var fetchMobAuth = async (email, password) => {

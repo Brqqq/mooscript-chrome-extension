@@ -22,7 +22,7 @@
     "webRequest",
     "webRequestBlocking",
     "webNavigation",
-    "https://www.mobstar.cc/*"
+    "https://*.mobstar.cc/*"
   ],
   "optional_permissions": [
     "http://*/",
