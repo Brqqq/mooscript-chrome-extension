@@ -79,6 +79,7 @@ const AccountTable = (props) => {
         onRemove,
         accounts,
         onScriptActiveChange,
+        columnVisibility
     } = props;
 
     const onLogin = (e, email) => {
@@ -133,15 +134,17 @@ const AccountTable = (props) => {
         chrome.extension.getBackgroundPage().updateAccount(email, newAccount);
     }
 
+    const visible = columnVisibility || {};
+
     return <table id="accounts">
         <thead>
             <tr>
                 <th></th>
-                <th><SortButton prop="type">Type</SortButton></th>
-                <th>Update</th>
+                {visible.type && <th><SortButton prop="type">Type</SortButton></th>}
+                {visible.update && <th>Update</th>}
                 <th>Login</th>
                 <th>Start</th>
-                <th>Script status</th>
+                {visible.scriptStatus && <th>Script status</th>}
                 <th><SortButton prop="enableJailbusting">{jailBustingIcon}</SortButton></th>
                 <th><SortButton prop="enableSmallCrime">{smallCrimeIcon}</SortButton></th>
                 <th><SortButton prop="enableGta">{gtaIcon}</SortButton></th>
@@ -152,17 +155,17 @@ const AccountTable = (props) => {
                 <th><SortButton prop="email">Email</SortButton></th>
                 <th><SortButton prop="name">Name</SortButton></th>
                 <th><SortButton prop="rank">Rank</SortButton></th>
-                <th><SortButton prop="cash">Cash</SortButton></th>
-                <th><SortButton prop="bullets">Bullets</SortButton></th>
-                <th><SortButton prop="country">Country</SortButton></th>
-                <th><SortButton prop="lead">Lead</SortButton></th>
-                <th><SortButton prop="crew">Crew</SortButton></th>
-                <th><SortButton prop="previousCrew">Previous crew</SortButton></th>
-                <th><SortButton prop="plane">Plane</SortButton></th>
-                <th><SortButton prop="startDate">Start date</SortButton></th>
-                <th><SortButton prop="payingDays">Paying days</SortButton></th>
-                <th><SortButton prop="honor">Honor</SortButton></th>
-                <th><SortButton prop="credits">Credits</SortButton></th>
+                {visible.cash && <th><SortButton prop="cash">Cash</SortButton></th>}
+                {visible.bullets && <th><SortButton prop="bullets">Bullets</SortButton></th>}
+                {visible.country && <th><SortButton prop="country">Country</SortButton></th>}
+                {visible.lead && <th><SortButton prop="lead">Lead</SortButton></th>}
+                {visible.crew && <th><SortButton prop="crew">Crew</SortButton></th>}
+                {visible.prevCrew && <th><SortButton prop="previousCrew">Previous crew</SortButton></th>}
+                {visible.plane && <th><SortButton prop="plane">Plane</SortButton></th>}
+                {visible.startDate && <th><SortButton prop="startDate">Start date</SortButton></th>}
+                {visible.payingDays && <th><SortButton prop="payingDays">Paying days</SortButton></th>}
+                {visible.honor && <th><SortButton prop="honor">Honor</SortButton></th>}
+                {visible.credits && <th><SortButton prop="credits">Credits</SortButton></th>}
                 <th>Remove</th>
             </tr>
         </thead>
@@ -173,17 +176,17 @@ const AccountTable = (props) => {
                     <td>
                         {idx + 1}
                     </td>
-                    <td>
+                    {visible.type && <td>
                         <TypeChooser onChange={(newType) => onTypeChange(account, email, newType)} value={account.type} />
-                    </td>
-                    <td>
+                    </td>}
+                   {visible.update && <td>
                         <button
                             title="Tries to update your account info in this table as soon as possible"
                             onClick={() => props.onAddToAccountUpdateList(email)}
                         >
                             Update
                         </button>
-                    </td>
+                    </td>}
                     <td>
                         <form method="post" action="https://www.mobstar.cc/main/login.php?mooscript=true" target="mobstar" onSubmit={(e) => onLogin(e, email)}>
                             <input type="hidden" name="email" value={email} />
@@ -197,10 +200,10 @@ const AccountTable = (props) => {
                         {account.active && <button className="link-button" onClick={() => onScriptActiveChange(email, false)}><img className="icon-small" src={Pause} /></button>}
                         {!account.active && <button className="link-button" onClick={() => onScriptActiveChange(email, true)}><img className="icon-small" src={Play} /></button>}
                     </td>
-                    <td>
+                    {visible.scriptStatus && <td>
                         {account.active && "Running..."}
                         {!account.active && "Paused"}
-                    </td>
+                    </td>}
                     <td className="composite-icon">
                         <ConfigIcon title="Jail busting" svg={JailBusting} propName="enableJailbusting" email={email} account={account} />
                     </td>
@@ -228,17 +231,17 @@ const AccountTable = (props) => {
                         {!account.dead && account.rank}
                         {account.dead && <><span style={{ color: "red" }}>DEAD</span> ({account.rank})</>}
                     </td>
-                    <td><DeathStrike dead={account.dead}>€ {account.cash && account.cash.toLocaleString()}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.bullets}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.country}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{typeof account.lead === "number" ? `${account.lead.toLocaleString()} kg` : account.lead}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.crew}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.previousCrew}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.plane}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.startDate}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.payingDays}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.honor}</DeathStrike></td>
-                    <td><DeathStrike dead={account.dead}>{account.credits}</DeathStrike></td>
+                    {visible.cash && <td><DeathStrike dead={account.dead}>€ {account.cash && account.cash.toLocaleString()}</DeathStrike></td>}
+                    {visible.bullets && <td><DeathStrike dead={account.dead}>{account.bullets}</DeathStrike></td>}
+                    {visible.country && <td><DeathStrike dead={account.dead}>{account.country}</DeathStrike></td>}
+                    {visible.lead && <td><DeathStrike dead={account.dead}>{typeof account.lead === "number" ? `${account.lead.toLocaleString()} kg` : account.lead}</DeathStrike></td>}
+                    {visible.crew && <td><DeathStrike dead={account.dead}>{account.crew}</DeathStrike></td>}
+                    {visible.prevCrew && <td><DeathStrike dead={account.dead}>{account.previousCrew}</DeathStrike></td>}
+                    {visible.plane && <td><DeathStrike dead={account.dead}>{account.plane}</DeathStrike></td>}
+                    {visible.startDate && <td><DeathStrike dead={account.dead}>{account.startDate}</DeathStrike></td>}
+                    {visible.payingDays && <td><DeathStrike dead={account.dead}>{account.payingDays}</DeathStrike></td>}
+                    {visible.honor && <td><DeathStrike dead={account.dead}>{account.honor}</DeathStrike></td>}
+                    {visible.credits && <td><DeathStrike dead={account.dead}>{account.credits}</DeathStrike></td>}
                     <td>
                         <button onClick={e => {
                             e.preventDefault();

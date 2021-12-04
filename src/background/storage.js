@@ -118,6 +118,17 @@ export const updateConfig = async (props) => {
     return setInStorage({ config: updatedConfig });
 }
 
+export const setGlobalSettings = async (columnVisibility) => {
+    const { config } = await getFromStorage("config");
+
+    const updatedConfig = {
+        ...config,
+        columnVisibility
+    };
+
+    return setInStorage({ config: updatedConfig });
+}
+
 export const addAccountsToUpdateList = async (emails) => {
     const newList = [...new Set([...getConfig().updateAccounts, ...emails])];
 
@@ -183,6 +194,22 @@ export const initStorage = async () => {
         drugrunUrl: "http://extension.mooscript.com/api/drug-run",
         drugrunType: "stats", // "stats" | "api"
         drugrunApiError: "",
+        columnVisibility: {
+            type: true,
+            update: true,
+            scriptStatus: true,
+            cash: true,
+            bullets: true,
+            country: true,
+            lead: true,
+            crew: true,
+            prevCrew: true,
+            plane: true,
+            startDate: true,
+            payingDays: true,
+            honor: true,
+            credits: true
+        },
         ...result.config
     };
 
@@ -213,7 +240,7 @@ export const initStorage = async () => {
         if (changes.detective != null) {
             detective = changes.detective.newValue;
         }
-        if(changes.sync != null) {
+        if (changes.sync != null) {
             sync = changes.sync.newValue;
         }
     });

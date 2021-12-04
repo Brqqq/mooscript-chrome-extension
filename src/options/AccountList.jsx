@@ -1,6 +1,6 @@
 /*global chrome*/
 import React from "react";
-import ConfigModal from "./ConfigModal";
+import ConfigureAccountsModal from "./ConfigureAccountsModal";
 import Rodal from 'rodal';
 import Options from "./Options";
 import AccountTable from "./AccountTable";
@@ -37,7 +37,7 @@ const AccountList = (props) => {
         return () => {
             chrome.storage.local.onChanged.removeListener(onStorageChanges);
         };
-    }, [onStorageChanges]);
+    }, []);
 
     React.useEffect(() => {
         chrome.storage.local.get(["accounts", "drugs", "config"], ({ accounts, drugs, config }) => {
@@ -101,7 +101,7 @@ const AccountList = (props) => {
 
     return <>
         <Options accounts={accounts} drugs={drugs} />
-        {hasDrugRun && <h2>DR: {drugs.run1.country || "<unknown>"} -> {drugs.run2.country || "<unknown>"}</h2>}
+        {hasDrugRun && <h2>DR: {drugs.run1.country || "<unknown>"} -{'>'} {drugs.run2.country || "<unknown>"}</h2>}
         {config.drugrunApiError && <span style={{ color: "red" }}>{config.drugrunApiError}</span>}
         <h2>Total cash: € {totalCash.toLocaleString()}</h2>
 
@@ -121,6 +121,7 @@ const AccountList = (props) => {
                 accounts={filteredAccounts}
                 onScriptActiveChange={setActive}
                 onLogin={onLogin}
+                columnVisibility={config.columnVisibility}
             />}
 
         {/* We dont use the `visibility` prop because we want an unmountOnExit behavior that doesn't exist */}
@@ -129,7 +130,7 @@ const AccountList = (props) => {
             onClose={() => setShowAccountConfig(false)}
             height={390}
         >
-            <ConfigModal
+            <ConfigureAccountsModal
                 accounts={filteredAccounts}
                 onClose={() => setShowAccountConfig(false)}
             />

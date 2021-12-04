@@ -2,7 +2,7 @@ import "./lib/moment.js";
 import "./lib/moment-timezone.js";
 
 import { doSmallCrime } from "./actions/smallcrime.js"
-import { setDrugrunType, addNewDetectiveSearch, addNewDetectiveFind, removeAccount, updateAccount, updateAccounts, addAccount, updateEveryAccount, resetDrugRun, getFromStorage, setInStorage, initStorage, getAccounts, getConfig, updateConfig, addAccountsToUpdateList, getDetective, removeDetectiveSearch, removeDetectiveResult, setSync, getSync } from "./storage.js";
+import { setGlobalSettings, setDrugrunType, addNewDetectiveSearch, addNewDetectiveFind, removeAccount, updateAccount, updateAccounts, addAccount, updateEveryAccount, resetDrugRun, getFromStorage, setInStorage, initStorage, getAccounts, getConfig, updateConfig, addAccountsToUpdateList, getDetective, removeDetectiveSearch, removeDetectiveResult, setSync, getSync } from "./storage.js";
 import { doGta } from "./actions/carstealing.js";
 import { sellCars } from "./actions/carseller.js";
 import { findDrugRun } from "./actions/drugrunfinder.js";
@@ -169,29 +169,6 @@ var fetchMobAuth = async (email, password) => {
 }
 window.fetchMobAuth = fetchMobAuth;
 
-const useAuthToken = (email) => {
-    const token = mobAuths[email];
-    return new Promise((resolve, reject) => {
-        if (token == null) {
-            reject("Not logged in");
-            return;
-        }
-        try {
-            chrome.cookies.set({
-                url: "https://www.mobstar.cc",
-                domain: ".mobstar.cc",
-                name: "MOBSTAR_AUTH",
-                value: token.split("=")[1]
-            }, (cookie) => {
-                resolve(cookie);
-            });
-        } catch (e) {
-            reject(e);
-        }
-    });
-}
-window.useAuthToken = useAuthToken;
-
 window.addAccount = addAccount;
 
 window.removeAccount = removeAccount;
@@ -214,6 +191,8 @@ window.removeDetectiveResult = removeDetectiveResult;
 window.setSync = setSync;
 
 window.setDrugrunType = setDrugrunType;
+
+window.setGlobalSettings = setGlobalSettings;
 
 window.startDetectiveSearch = async (searcher, target, countries, clearPastSearches) => {
     let attempts = 0;

@@ -3,6 +3,7 @@ import React from "react";
 import Rodal from "rodal";
 import Sync from "./Sync";
 import DrugrunSettings from "./DrugrunSettings";
+import GlobalConfigModal from "./GlobalConfigModal";
 
 const ExportModal = props => {
     return <Rodal
@@ -88,6 +89,7 @@ const Options = props => {
     const [showImportModal, setShowImportModal] = React.useState(false);
     const [showSyncModal, setSyncModal] = React.useState(false);
     const [showDrugrunConfig, setShowDrugrunConfig] = React.useState(false);
+    const [showGlobalConfig, setShowGlobalConfig] = React.useState(false);
 
     const setAllToActiveStatus = (newStatus) => {
         chrome.extension.getBackgroundPage().updateEveryAccount({ active: newStatus });
@@ -115,6 +117,8 @@ const Options = props => {
         &nbsp;
         <button onClick={() => setShowDrugrunConfig(true)}>Drugrun config</button>
         &nbsp;
+        <button onClick={() => setShowGlobalConfig(true)}>Global settings</button>
+        &nbsp;
         <button onClick={resetDrugRun}>Reset drug run</button>
         &nbsp;
         <button onClick={() => window.location = "/messages.html"}>Witness list</button>
@@ -123,6 +127,7 @@ const Options = props => {
         {showImportModal && <ImportModal onClose={() => setShowImportModal(false)} />}
         {showSyncModal && <Sync onClose={() => setSyncModal(false)} />}
         {showDrugrunConfig && <DrugrunSettings onClose={() => setShowDrugrunConfig(false)} />}
+        {showGlobalConfig && <GlobalConfigModal onClose={() => setShowGlobalConfig(false)} />}
     </div>
 }
 
