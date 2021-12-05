@@ -29,7 +29,6 @@ const AccountList = ({ filteredAccounts, config, filteredAccountKeys}) => {
     }
 
     return <>
-        {filteredAccountKeys.length === 0 && <div>There are no accounts.</div>}
         {filteredAccountKeys.length > 0 &&
             <AccountTable
                 onAddToAccountUpdateList={onAddToAccountUpdateList}
