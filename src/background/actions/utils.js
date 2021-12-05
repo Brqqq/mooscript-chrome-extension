@@ -206,6 +206,7 @@ export const getPlayerInfo = async ({ email, ...rest }) => {
     const { document: pointShopDoc } = await getDoc(Routes.PointsShop, email);
     const { document: accountsDoc } = await postForm(Routes.PersonalAjax, "page=1&_", email);
     const { document: leadDoc } = await getDoc(Routes.LeadFactory, email);
+    const { document: stocksDoc } = await getDoc(Routes.Stocks, email);
 
     // You might think: why don't you get the cash/rank/bullets/etc from that table on the top of most pages? Or just eval the JS that contains the data? Instead of the convoluted BS
     // Well, my dear imaginary asker, that table gets added dynamically with JS. We don't render the page, only get the raw HTML. So that table will be empty.
@@ -223,6 +224,11 @@ export const getPlayerInfo = async ({ email, ...rest }) => {
     let messages = rest.messages || [];
     let previousCrew = rest.previousCrew || "";
     let startDate = rest.startDate || "";
+
+    let stocks = Array.from(stocksDoc.querySelectorAll("td[colSpan='2']"))
+        .filter((_, idx) => idx % 2 === 0)
+        .map(el => +el.innerText.match(/€ .*/)[0].replace(/\D/g, ""))
+        .reduce((sum, curr) => sum + curr, 0);
 
 
     // This seems to trigger click limits
@@ -264,7 +270,8 @@ export const getPlayerInfo = async ({ email, ...rest }) => {
         messages,
         previousCrew,
         startDate,
-        plane
+        plane,
+        stocks
     }
 }
 

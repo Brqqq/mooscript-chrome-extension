@@ -61,7 +61,7 @@ const booleanSort = (accountList, propToCompare, isAsc) => {
 }
 
 
-const numericalProps = ["cash", "bullets", "lead", "payingDays", "honor", "credits"];
+const numericalProps = ["cash", "stocks", "bullets", "lead", "payingDays", "honor", "credits"];
 const alphabeticalProps = ["email", "name", "crew", "country", "type", "plane", "startDate", "previousCrew"];
 const booleanProps = ["enableJailbusting", "enableSmallCrime", "enableGta", "enableCarSelling", "enableItemBuying", "enableDrugRunning", "enableBuyingPbf"];
 

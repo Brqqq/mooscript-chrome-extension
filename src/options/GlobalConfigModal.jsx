@@ -9,6 +9,7 @@ const GlobalConfigModal = props => {
         update: false,
         scriptStatus: false,
         cash: false,
+        stocks: false,
         bullets: false,
         country: false,
         lead: false,
@@ -85,6 +86,11 @@ const GlobalConfigModal = props => {
                             description="Cash"
                             value={visibilitySettings.cash}
                             onChange={() => onPropToggle("cash")}
+                        />
+                        <CheckboxRow
+                            description="Stocks"
+                            value={visibilitySettings.stocks}
+                            onChange={() => onPropToggle("stocks")}
                         />
                         <CheckboxRow
                             description="Bullets"

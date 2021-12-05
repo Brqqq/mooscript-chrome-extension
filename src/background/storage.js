@@ -4,6 +4,34 @@ let config = {};
 let detective = {};
 let sync = {};
 
+const defaultAccount = {
+    active: true,
+    dead: false,
+    invalidPassword: false,
+    enableJailbusting: true,
+    enableSmallCrime: true,
+    enableGta: true,
+    enableCarSelling: true,
+    enableItemBuying: true,
+    enableDrugRunning: true,
+    enableBuyingPbf: false,
+    cash: 0,
+    rank: "",
+    crew: "",
+    bullets: 0,
+    honor: 0,
+    credits: 0,
+    payingDays: 0,
+    country: "",
+    name: "",
+    lead: "",
+    type: "⭕",
+    plane: "",
+    previousCrew: "",
+    startDate: "",
+    stocks: 0
+};
+
 export const getFromStorage = (keysToGet) => {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get(keysToGet, (result) => {
@@ -39,30 +67,7 @@ export const addAccount = async (email, password) => {
         ...accounts,
         [email]: {
             password,
-            active: true,
-            dead: false,
-            invalidPassword: false,
-            enableJailbusting: true,
-            enableSmallCrime: true,
-            enableGta: true,
-            enableCarSelling: true,
-            enableItemBuying: true,
-            enableDrugRunning: true,
-            enableBuyingPbf: false,
-            cash: 0,
-            rank: "",
-            crew: "",
-            bullets: 0,
-            honor: 0,
-            credits: 0,
-            payingDays: 0,
-            country: "",
-            name: "",
-            lead: "",
-            type: "⭕",
-            plane: "",
-            previousCrew: "",
-            startDate: ""
+            ...defaultAccount
         }
     };
 
@@ -157,6 +162,18 @@ export const initStorage = async () => {
     const result = await getFromStorage(["accounts", "drugs", "config", "detective", "sync"]);
 
     accounts = result.accounts || {};
+    
+    // This migrates accounts by adding all the default values
+    accounts = Object.keys(accounts).reduce((accs, email) => {
+        const account = accounts[email];
+        return {
+            ...accs,
+            [email]: {
+                ...defaultAccount,
+                ...account
+            }
+        }
+    }, {});
     drugs = result.drugs || {
         run1: {
             country: "",
@@ -225,7 +242,7 @@ export const initStorage = async () => {
         serverName: ""
     };
 
-    await setInStorage({ detective, config });
+    await setInStorage({ detective, config, accounts });
 
     chrome.storage.local.onChanged.addListener((changes) => {
         if (changes.accounts != null) {

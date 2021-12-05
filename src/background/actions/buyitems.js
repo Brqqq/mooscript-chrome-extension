@@ -7,12 +7,11 @@ export const buyItems = async (account) => {
         "weapon",
         "protection",
         "plane",
-        "plf"
+        "plf",
     ];
 
     const { document: inventoryDoc } = await getDoc(Routes.Inventory, account.email);
-    //document.getElementById("weapondata").innerText
-
+    
     const weapon = inventoryDoc.getElementById("weapondata").innerText;
     const weaponPrice = 50_000;
     const weaponBuyBody = ["item=weapon", "buyweapon=1", "buy=Buy this weapon", "buywhat=weapon"].join("&");
@@ -32,6 +31,10 @@ export const buyItems = async (account) => {
     const bulletFactory = inventoryDoc.getElementById("pbfdata").innerText;
     const bulletFactoryPrice = 8_000_000;
     const bulletFactoryBuyBody = ["item=pbf", "buypbf=1", "buy=Buy this bulletfactory", "buywhat=pbf"].join("&");
+
+    const depositBox = inventoryDoc.getElementById("depositboxdata").innerText;
+    const depositBoxPrice = 1_000_000;
+    const depositBoxBuyBody = ["item=depositbox", "buydepositbox=1", "buy=Buy this depositbox", "buywhat=depositbox"].join("&");
 
     const itemsData = [
         {
@@ -54,7 +57,13 @@ export const buyItems = async (account) => {
             price: leadFactoryPrice,
             body: leadFactoryBuyBody,
             current: leadFactory
-        }
+        }, 
+        // {
+        //     buyItem: "depositbox",
+        //     price: depositBoxPrice,
+        //     body: depositBoxBuyBody,
+        //     current: depositBox
+        // }
     ];
 
     if(account.enableBuyingPbf) {

@@ -135,7 +135,7 @@ const AccountTable = (props) => {
     }
 
     const visible = columnVisibility || {};
-
+    console.log(visible);
     return <table id="accounts">
         <thead>
             <tr>
@@ -156,6 +156,7 @@ const AccountTable = (props) => {
                 <th><SortButton prop="name">Name</SortButton></th>
                 <th><SortButton prop="rank">Rank</SortButton></th>
                 {visible.cash && <th><SortButton prop="cash">Cash</SortButton></th>}
+                {visible.stocks && <th><SortButton prop="stocks">Stocks</SortButton></th>}
                 {visible.bullets && <th><SortButton prop="bullets">Bullets</SortButton></th>}
                 {visible.country && <th><SortButton prop="country">Country</SortButton></th>}
                 {visible.lead && <th><SortButton prop="lead">Lead</SortButton></th>}
@@ -232,6 +233,7 @@ const AccountTable = (props) => {
                         {account.dead && <><span style={{ color: "red" }}>DEAD</span> ({account.rank})</>}
                     </td>
                     {visible.cash && <td><DeathStrike dead={account.dead}>€ {account.cash && account.cash.toLocaleString()}</DeathStrike></td>}
+                    {visible.stocks && <td><DeathStrike dead={account.dead}>€ {account.stocks && account.stocks.toLocaleString()}</DeathStrike></td>}
                     {visible.bullets && <td><DeathStrike dead={account.dead}>{account.bullets}</DeathStrike></td>}
                     {visible.country && <td><DeathStrike dead={account.dead}>{account.country}</DeathStrike></td>}
                     {visible.lead && <td><DeathStrike dead={account.dead}>{typeof account.lead === "number" ? `${account.lead.toLocaleString()} kg` : account.lead}</DeathStrike></td>}
