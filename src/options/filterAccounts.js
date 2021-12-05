@@ -1,4 +1,4 @@
-const normalizeRank = (rank) => {
+export const normalizeRank = (rank) => {
     switch(rank) {
 		case "Young Woman": return "Low Life";
 		case "Adult Lady": return "Apprentice";

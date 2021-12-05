@@ -135,7 +135,6 @@ const AccountTable = (props) => {
     }
 
     const visible = columnVisibility || {};
-    console.log(visible);
     return <table id="accounts">
         <thead>
             <tr>
