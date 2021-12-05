@@ -226,7 +226,7 @@ export const getPlayerInfo = async ({ email, ...rest }) => {
     let startDate = rest.startDate || "";
 
     let stocks = Array.from(stocksDoc.querySelectorAll("td[colSpan='2']"))
-        .filter((_, idx) => idx % 2 === 0)
+        .filter((_, idx) => idx % 2 !== 0)
         .map(el => +el.innerText.match(/€ .*/)[0].replace(/\D/g, ""))
         .reduce((sum, curr) => sum + curr, 0);
 
