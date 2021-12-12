@@ -1,0 +1,12 @@
+Privacy Policy
+Last updated: December 12, 2021
+
+This privacy policy describes how your data is used. If you are reading this, then: hi Google review employee, you're probably the only one who will ever read this.
+
+Mooscript stores everything you filled out in the forms in Mooscript, such as email addresses and passwords. This data is stored locally on your device. 
+
+Mooscript uses this data when it tries to authenticate you with Mobstar.cc over an HTTPS connection. This is expected; the purpose of Mooscript is to automatically access mobstar.cc using your account information. This data is not stored or transmitted to anywhere else.
+
+Mooscript does not gather any data in the background. No telemetry or other usage information is gathered. 
+
+For questions, please contact cow@mooscript.com
