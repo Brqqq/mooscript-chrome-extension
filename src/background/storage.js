@@ -67,6 +67,7 @@ export const addAccount = async (email, password) => {
         ...accounts,
         [email]: {
             password,
+            email: email,
             ...defaultAccount
         }
     };
@@ -162,7 +163,7 @@ export const initStorage = async () => {
     const result = await getFromStorage(["accounts", "drugs", "config", "detective", "sync"]);
 
     accounts = result.accounts || {};
-    
+
     // This migrates accounts by adding all the default values
     accounts = Object.keys(accounts).reduce((accs, email) => {
         const account = accounts[email];
@@ -170,7 +171,8 @@ export const initStorage = async () => {
             ...accs,
             [email]: {
                 ...defaultAccount,
-                ...account
+                ...account,
+                email
             }
         }
     }, {});
@@ -178,6 +180,7 @@ export const initStorage = async () => {
         run1: {
             country: "",
             date: "",
+            manualDrug: "XTC",
             prices: {
                 Weed: 0,
                 XTC: 0,
@@ -192,6 +195,7 @@ export const initStorage = async () => {
         run2: {
             country: "",
             date: "",
+            manualDrug: "XTC",
             prices: {
                 Weed: 0,
                 XTC: 0,
@@ -204,6 +208,11 @@ export const initStorage = async () => {
             }
         }
     };
+
+    if(result.drugs && result.drugs.run1.manualDrug == null) {
+        drugs.run1.manualDrug = "XTC";
+        drugs.run2.manualDrug = "XTC";
+    }
 
     config = {
         updateAccounts: [],
@@ -242,7 +251,7 @@ export const initStorage = async () => {
         serverName: ""
     };
 
-    await setInStorage({ detective, config, accounts });
+    await setInStorage({ detective, config, accounts, drugs });
 
     chrome.storage.local.onChanged.addListener((changes) => {
         if (changes.accounts != null) {
@@ -372,13 +381,33 @@ export const setSync = async (url, username, password, serverName) => {
 
 export const setDrugrunType = async (drugrunType, drugrunUrl) => {
     const { config } = await getFromStorage("config");
+    if (!drugrunUrl) {
+        drugrunUrl = config.drugrunUrl;
+    }
     await setInStorage({
         config: {
             ...config,
             drugrunUrl,
             drugrunType
         }
-    })
+    });
+}
+
+export const setManualDrugType = async (runNr, country, drugType, date) => {
+    const { drugs } = await getFromStorage("drugs");
+
+    const oldRun = drugs["run" + runNr];
+    await setInStorage({
+        drugs: {
+            ...drugs,
+            ["run" + runNr]: {
+                ...oldRun,
+                country,
+                manualDrug: drugType,
+                date
+            }
+        }
+    });
 }
 
 export const setDrugrunError = async (message) => {

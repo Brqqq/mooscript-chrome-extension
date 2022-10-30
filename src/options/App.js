@@ -11,6 +11,7 @@ import AccountFilter from "./AccountFilter";
 import Options from "./Options";
 import Rodal from "rodal";
 import ConfigureAccountsModal from "./ConfigureAccountsModal";
+import DrugrunCountry from "./DrugrunCountry";
 
 function App() {
     const [accounts, setAccounts] = React.useState({});
@@ -56,6 +57,7 @@ function App() {
     }
 
     const hasDrugRun = drugs?.run1 != null && drugs?.run2 != null;
+    const hasManualDrugRun = config?.drugrunType === "manual";
     const filteredAccounts = filterAccounts(accounts, filter);
 
     const filteredAccountKeys = Object.keys(filteredAccounts);
@@ -84,13 +86,19 @@ function App() {
         // <Paperbase />
         <>
             <div style={{ display: "flex" }}>
-            <div style={{ flexGrow: 1}}></div>
+                <div style={{ flexGrow: 1 }}></div>
                 <div className="App" style={{ flexGrow: 3 }}>
                     <a href="https://www.buymeacoffee.com/mooscript" target="_blank">☕ Buy me a coffee and support my work!</a>
                     <NewUser onSubmit={onNewAccountAdded} />
 
                     <Options accounts={accounts} drugs={drugs} />
-                    {hasDrugRun && <h2>DR: {drugs.run1.country || "<unknown>"} -{'>'} {drugs.run2.country || "<unknown>"}</h2>}
+                    {hasManualDrugRun && <div style={{ marginTop: 4 }}>
+                        <DrugrunCountry runNr={1} />
+                        &nbsp;{'<'}--{'>'}&nbsp;
+                        <DrugrunCountry runNr={2} />
+                    </div>}
+                    {!hasManualDrugRun && hasDrugRun && <h2>DR: {drugs.run1.country || "<unknown>"} {'<'}--{'>'} {drugs.run2.country || "<unknown>"}</h2>}
+
                     {config.drugrunApiError && <span style={{ color: "red" }}>{config.drugrunApiError}</span>}
                     <h2>Total cash: € {totalCash.toLocaleString()}</h2>
 

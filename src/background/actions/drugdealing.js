@@ -1,5 +1,5 @@
 import { Routes } from "./routes.js"
-import { getDrugsInfo, updateDrugRunPrices } from "../storage.js"
+import { getDrugsInfo, updateDrugRunPrices, getConfig } from "../storage.js"
 import { getDoc, getCurrentCountry, parseDrugsWindow, getBestDrug, postForm, getCash, buildDrugSaleBody, buildDrugPriceMap } from "./utils.js";
 
 const extraTime = 10000
@@ -13,6 +13,7 @@ const noMoneyCooldown = 15 * 60 * 1000;
 
 export const doDrugDeal = async (account) => {
     const drugsInfo = getDrugsInfo();
+    const config = getConfig();
 
     const today = moment().tz("Europe/Amsterdam").format("YYYY-MM-DD");
 
@@ -45,7 +46,9 @@ export const doDrugDeal = async (account) => {
         return { ...acc, [drugInfo.name]: drugInfo.price }
     }, {});
 
-    const bestDrugToBuy = getBestDrug(nextRun.prices, currentDrugPrices);
+    const bestDrugToBuy = config.drugrunType === "manual" ?
+        nextRun.manualDrug :
+        getBestDrug(nextRun.prices, currentDrugPrices);
 
     // If we are currently carrying any other drug, we must sell that first
     // However, this causes a 2 min cooldown on buying drugs so we must abort after
@@ -103,9 +106,9 @@ export const doDrugDeal = async (account) => {
     await updateDrugRunPrices(currentCountry, buildDrugPriceMap(drugsPage), nextRun.country, buildDrugPriceMap(newDrugPage));
 
     const airportCooldownLine = flightsPage.documentElement.innerHTML.match(/id: 'airport'.*/);
-    if(airportCooldownLine) {
+    if (airportCooldownLine) {
         const cooldown = airportCooldownLine[0].match(/(\d+)(?!.*\d)/); // Get last number in the line
-        if(cooldown) {
+        if (cooldown) {
             return (1000 * +cooldown[0]) + 5000
         }
     }

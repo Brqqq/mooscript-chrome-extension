@@ -14,11 +14,11 @@ export const setAuthCookie = (requestHeaders, cookieToSet) => {
 
 const addToCookie = (cookie, cookieToAdd) => {
     const values = cookie.split(";");
-    const toAddName = cookieToAdd.split("=")[0];
+    const toAddName = cookieToAdd.split("=")[0]?.trim();
 
     let hasAdded = false;
     for(let i = 0; i < values.length; i++) {
-        if(values[i].split("=")[0] === toAddName) {
+        if(values[i].split("=")[0]?.trim() === toAddName) {
             values[i] = cookieToAdd;
             break;
         }
