@@ -3,7 +3,7 @@ import React from "react";
 //import moment from "../background/lib/moment.js";
 import moment from "../background/lib/moment-timezone.js";
 
-const countries = ["Netherlands", "United States", "Italy", "China", "Great Britain"];
+const countries = ["Netherlands", "United States", "Italy", "China", "Great Britain", "Cuba"];
 
 const getDrugTypes = () => ({
     Weed: "Nederwiet",
