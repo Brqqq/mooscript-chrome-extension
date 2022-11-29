@@ -107,9 +107,9 @@ export const doDrugDeal = async (account) => {
 
     const airportCooldownLine = flightsPage.documentElement.innerHTML.match(/id: 'airport'.*/);
     if (airportCooldownLine) {
-        const cooldown = airportCooldownLine[0].match(/(\d+)(?!.*\d)/); // Get last number in the line
+        const cooldown = airportCooldownLine[0].match(/maxTime: (\d+)/);
         if (cooldown) {
-            return (1000 * +cooldown[0]) + 5000
+            return (1000 * +cooldown[1]) + 5000
         }
     }
     return successfulCooldown;
