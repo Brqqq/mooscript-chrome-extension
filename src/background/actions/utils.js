@@ -199,7 +199,7 @@ export const buildDrugSaleBody = (buyOrSell, drugs) => {
  * Document must contain info like rank, weapon etc
  */
 export const getCash = (docWithStats) => {
-    return +docWithStats.querySelectorAll("body > script:nth-child(7)")[0].innerText.match(/&euro;&nbsp;.*/)[0].replace(/\D/g, "");
+    return +docWithStats.querySelectorAll("body > script")[4].innerText.match(/&euro;&nbsp;.*/)[0].replace(/\D/g, "");
 }
 
 export const getPlayerInfo = async ({ email, ...rest }) => {
@@ -214,11 +214,11 @@ export const getPlayerInfo = async ({ email, ...rest }) => {
     // So instead we have to parse the JS on the page as text like a pleb
 
     const lead = leadDoc.querySelectorAll("form > b")[0];
-    const crew = pointShopDoc.querySelectorAll("body > script:nth-child(7)")[0].innerText.match(/label:"Crew", value:"(.*?)"/)[1].trim();
+    const crew = pointShopDoc.querySelectorAll("body > script")[4].innerText.match(/label:"Crew", value:"(.*?)"/)[1].trim();
     // When there is a crew, it's wrapped inside anchor tags. And yes I use regex to extract the name. Deal with it.
     const crewName = crew === "None" ? crew : crew.match(/>(.*?)</)[1];
     const isPaying = accountsDoc.querySelectorAll(".userprof > tbody > tr > td")[8].innerText.trim() === "Yes";
-    const plane = pointShopDoc.querySelectorAll("body > script:nth-child(7)")[0].innerText.match(/label:"Plane", value:"(.*?)"/)[1].trim();
+    const plane = pointShopDoc.querySelectorAll("body > script")[4].innerText.match(/label:"Plane", value:"(.*?)"/)[1].trim();
     const accountAnchor = accountsDoc.querySelectorAll(".userprof > tbody > tr > td > a")[0];
 
     let messages = rest.messages || [];
@@ -256,8 +256,8 @@ export const getPlayerInfo = async ({ email, ...rest }) => {
 
     return {
         cash: getCash(pointShopDoc),
-        rank: pointShopDoc.querySelectorAll("body > script:nth-child(7)")[0].innerText.match(/label:"Rank", value:"(.*?)"/)[1],
-        bullets: +pointShopDoc.querySelectorAll("body > script:nth-child(7)")[0].innerText.match(/&nbsp;\((\d+)/)[1],
+        rank: pointShopDoc.querySelectorAll("body > script")[4].innerText.match(/label:"Rank", value:"(.*?)"/)[1],
+        bullets: +pointShopDoc.querySelectorAll("body > script")[4].innerText.match(/&nbsp;\((\d+)/)[1],
         crew: crewName,
 
         honor: +pointShopDoc.querySelectorAll("#text_container > table.userprof > tbody > tr > td.footer")[0].innerText.replace(/,/g, "").match(/\d+/)[0],
